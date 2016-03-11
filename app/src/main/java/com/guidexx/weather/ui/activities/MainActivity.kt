@@ -1,4 +1,4 @@
-package com.guidexx.weather.activities
+package com.guidexx.weather.ui.activities
 
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
@@ -12,8 +12,13 @@ import android.view.MenuItem
 import com.guidexx.weather.R
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.find
-import com.guidexx.weather.adapters.ForecastListAdapter
+import org.jetbrains.anko.async
+import org.jetbrains.anko.longToast
+import org.jetbrains.anko.uiThread
 import android.support.v7.widget.LinearLayoutManager
+import com.guidexx.weather.data.Request
+import com.guidexx.weather.ui.adapters.ForecastListAdapter
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -34,6 +39,17 @@ class MainActivity : AppCompatActivity() {
         val forecastList: RecyclerView = find(R.id.forecast_list)
         forecastList.layoutManager = LinearLayoutManager(this)
         forecastList.adapter = ForecastListAdapter(items)
+
+
+        val url = "http://api.openweathermap.org/data/2.5/forecast/daily?" +
+                "APPID=15646a06818f61f7b8d7823ca833e1ce&q=94043&mode=json&units=metric&cnt=7"
+
+        async() {
+            Request(url).run()
+            uiThread { longToast("Request performed.") }
+        }
     }
+
+
 
 }
